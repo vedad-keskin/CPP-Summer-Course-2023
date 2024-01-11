@@ -1,0 +1,113 @@
+#include <iostream>
+using namespace std;
+
+char* GetNizKaraktera(const char* tekst) {
+    if (tekst == nullptr)
+        return nullptr;
+    int vel = strlen(tekst) + 1;
+    char* novi = new char[vel];
+    strcpy_s(novi, vel, tekst);
+    return novi;
+}
+
+
+template<class T>
+class Kolekcija {
+public:
+    T* _elementi;   // pokazivac na niz
+    int _max;
+    int *_trenutno;
+
+    // Potrebne kontruktore, destruktor i operatore
+
+
+  
+
+
+};
+
+class Artikal
+{
+public:
+    char* _kod;
+    char* _naziv;
+    float* _cijena;
+    int _kolicinaNaSkladistu;
+
+
+
+
+
+    // Potrebne kontruktore, destruktor i operatore
+};
+
+class PrehrambeniArtikal : public Artikal
+{
+public:
+    float _gramaza;
+    // Potrebne kontruktore, destruktor i operatore
+
+
+
+
+};
+
+class Odjeca : public Artikal
+{
+public:
+    char* _velicina; // xs, s, m, l, xl ...
+    char* _materijal;
+
+
+
+    // Potrebne kontruktore, destruktor i operatore
+
+};
+
+class Prodavnica
+{
+public:
+    char* _naziv;
+    char* _adresa;
+
+
+    Kolekcija<Odjeca> _odjeca;
+
+    Kolekcija<PrehrambeniArtikal> _prehrana;
+
+    // Konstruktore, destruktore
+
+
+
+
+
+
+    bool DodajOdjecu(Odjeca odjeca)
+    {
+        // Funkcija ima za cilj dodati novi komad odjece
+        // Onemoguciti dodavanje dva ista komada.
+
+
+
+    }
+
+    bool DodajPrehrambeniArtikal(PrehrambeniArtikal prehrana)
+    {
+        // Funkcija ima za cilj dodati novi prehrambeni artikl
+        // Onemoguciti dodavanje dva ista komada 
+
+
+
+    }
+
+
+};
+
+void main()
+{
+
+    
+
+
+
+}
