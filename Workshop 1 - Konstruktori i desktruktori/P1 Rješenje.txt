@@ -1,0 +1,207 @@
+#include <iostream>
+using namespace std;
+
+
+
+class Predmet {
+public:
+    char* _naziv; // Matemaika --> [ ]
+    int _ocjena; // 5
+
+
+	  //Napraviti
+	  //1. Defaultni konstruktor
+	  //2. Konstruktor koji prima parametre:naziv i ocjena
+	  //3. Konstruktor kopije
+	  //4. Operator dodjele
+	  //4. Destruktor
+	  //5. Ispis
+	  //6. COUT
+
+
+	  // 1. ALOKACIJA --> new dajemo adresu nekom parametru i kazemo koliko prostora u memoriju mu treba 
+
+	 // 2. DEALOKACIJA --> 
+
+	Predmet() { // dft. constructor
+		_ocjena = 5;
+
+		const char* temp = "Nema predmeta";
+		//char temp[] = "Nema predmeta";
+		int vel = strlen(temp)+1; // 14
+		_naziv = new char[vel];
+		strcpy_s(_naziv, vel, temp);   // 1. gdje hocemo da pohranimo nas niz karaktera, 2. koliko hoces da pohranis necega 3. sta hocemo da pohranimo
+	}
+	Predmet(const char* naziv,int ocjena) { // prog
+		_ocjena = ocjena;
+
+		int vel = strlen(naziv) + 1;
+		_naziv = new char[vel];
+		strcpy_s(_naziv, vel, naziv);
+	}
+
+
+	Predmet(const Predmet& obj) { // predmet1 = Progiramiranje 2 - 9 
+		_ocjena = obj._ocjena; // 9 
+
+		int vel = strlen(obj._naziv) + 1;
+		_naziv = new char[vel];
+		strcpy_s(_naziv, vel, obj._naziv);
+	}
+	//predmet5 = predmet1; // <--- Predmet lijeva strana  = ----> desne strane neki Predmet
+	// << >> = => < <= 
+	Predmet& operator = (const Predmet& obj){
+		if (this != &obj) {
+			delete[]_naziv;
+
+			_ocjena = obj._ocjena; // 9 
+
+			int vel = strlen(obj._naziv) + 1;
+			_naziv = new char[vel];
+			strcpy_s(_naziv, vel, obj._naziv);
+		}
+		return *this;
+	}
+
+
+	void Ispis() {
+		cout << _naziv << " - " << _ocjena << endl;
+	}
+	//cout << predmet5;
+
+	friend ostream& operator << (ostream& COUT,const Predmet& obj) {
+		COUT << obj._naziv << " - " << obj._ocjena << endl;
+		return COUT;
+	}
+
+	// ALT + 1 tilda
+	~Predmet() {
+		delete[] _naziv;
+		_naziv = nullptr;
+	}
+
+
+
+};
+
+class Student {
+public:
+	Predmet* _polozeni; // pokazivac na klasu --> ( )  niz --> [ ]  predmet1 = PR2 predmet2 = PR1
+	int _trenutno; // trenutno je broajac
+	int _max;
+
+	//konstruktor, 
+	//konstruktor kopije, 
+	//destruktor 
+	//potrebne funkcije
+	Student() {
+		_trenutno = 0;
+		_max = 3;
+		_polozeni = new Predmet[_max];
+	}
+	Student(int max) {
+		_trenutno = 0;
+		_max = max;
+		_polozeni = new Predmet[_max]; // 5 
+	}
+
+	Student(const Student& obj) { // PR2 PR1 OS 
+		_trenutno = obj._trenutno;
+		_max = obj._max;
+		_polozeni = new Predmet[_max];
+		for (int i = 0; i < _trenutno; i++)
+		{
+			_polozeni[i] = obj._polozeni[i];
+		}
+	}
+	//student3 = student0;
+	Student& operator = (const Student& obj) {
+		if (this!=&obj) {
+			delete[]_polozeni;
+
+			_trenutno = obj._trenutno;
+			_max = obj._max;
+			_polozeni = new Predmet[_max];
+			for (int i = 0; i < _trenutno; i++)
+			{
+				_polozeni[i] = obj._polozeni[i];
+			}
+		}
+		return *this;
+	}
+
+	                     //      OS 
+	void AddPolozeniPredmet(Predmet predmet) { // Programiranje 2  Operativne Sisteme    trenutno = 2 
+		//Dodaje novi polozeni predmet u niz
+		//Voditi računa da se ne moze dodavati isti predmet (istog naziva)
+		if (_trenutno == _max) { // 3 == 3 
+			cout << "Niz je pun" << endl;
+			return;
+		}
+
+		for (int i = 0; i < _trenutno; i++)
+		{ // 
+			if (strcmp(_polozeni[i]._naziv, predmet._naziv)==0) {   // strcmp(naziv1,naziv2)==0
+				cout << "Predmet je vec unesen" << endl;
+				return;
+			}
+		}
+
+
+		_polozeni[_trenutno] = predmet;  // polozeni[0] = Programiranje 2  , polozeni[1] = Matematika 1 polozeni[2] = OS 
+		_trenutno++;                    // trenutno 0 ---> 1    ----> 2  ---> 3
+	}
+	~Student() {
+		delete[]_polozeni;
+		_polozeni = nullptr;
+	}
+
+	void Ispis() {
+		cout << "Ovo su polozeni predmeti naseg studenta : " << endl;
+		for (int i = 0; i < _trenutno; i++) // trentuno = 2
+		{
+			cout << _polozeni[i]; // polozeni[0] = programiranje 2
+			//_polozeni[i].Ispis();
+		}
+	}
+};
+
+
+
+void main() {
+	//Predmet predmet0; // Nema predmeta - 5  <-- dft. construcotr
+	//predmet0.Ispis(); // 
+
+	Predmet predmet1("Programiranje 2",9); // <--- obicni constructor
+	Predmet predmet2("Programiranje 1", 7); // <--- obicni constructor
+	Predmet predmet3("Operativni sistemi",10); // <--- obicni constructor
+	Predmet predmet4("Matematika 1", 6); // <--- obicni constructor
+
+	//predmet1.Ispis();
+
+	//Predmet predmet3(predmet1); // <--- copy construcotr
+	////Predmet predmet4 = predmet1;
+	//predmet3.Ispis();
+
+	//Predmet predmet5; // dft. constr
+	//predmet5 = predmet5; // <--- Predmet lijeva strana  = ----> desne strane neki Predmet
+	//cout << predmet5;
+
+	Student student0;
+	student0.AddPolozeniPredmet(predmet1);
+	student0.AddPolozeniPredmet(predmet3);
+	student0.AddPolozeniPredmet(predmet3);
+	student0.AddPolozeniPredmet(predmet2);
+
+	Student student1(student0); // <--- copy constr
+
+	Student student3;
+	student3 = student0;
+
+	student3.Ispis();
+	//Student student1(5);
+
+
+	system("pause>0");
+}
+
