@@ -1,0 +1,72 @@
+#include <iostream>
+using namespace std;
+
+char* GetNizKaraktera(const char * tekst) {
+	if (tekst == nullptr)
+		return nullptr;
+	int vel = strlen(tekst) + 1;
+	char* novi = new char[vel];
+	strcpy_s(novi, vel, tekst);
+	return novi;
+}
+
+class Osoba {
+public:
+	char* _imeprezime; //  Vedad Keskin
+	char* _jmbg;   // 2312312312312
+           
+
+
+
+
+};
+
+
+class Profesor {
+public:
+	char* _Titula;
+
+
+
+
+};
+
+
+class Predmet {
+public:
+	char* _naziv;
+	int _ECTS;
+	Profesor* _predmetniProfesor;
+
+
+};
+
+
+
+
+
+
+
+
+
+class Student {
+public:
+	char* _index;
+	Predmet* _polozeniPredmeti; // ovo je niz [ ]
+	int _trenutno; // koliko trenutno ima unesenih predmeta
+	int _max;      // koliko maksimalno moze imati predmeta 
+
+
+
+};
+
+
+
+
+void main() {
+
+
+
+
+	system("PAUSE>0");
+}

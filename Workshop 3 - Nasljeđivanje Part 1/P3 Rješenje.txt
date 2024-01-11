@@ -1,0 +1,289 @@
+#include <iostream>
+using namespace std;
+
+char* GetNizKaraktera(const char * tekst) {
+	if (tekst == nullptr)
+		return nullptr;
+	int vel = strlen(tekst) + 1;
+	char* novi = new char[vel];
+	strcpy_s(novi, vel, tekst);
+	return novi;
+}
+
+class Osoba {
+public:
+	char* _imeprezime; //  Vedad Keskin
+	char* _jmbg;   // 2312312312312
+           
+
+	Osoba() {
+		const char* dfttekst = "---";
+
+		_imeprezime = GetNizKaraktera(dfttekst);
+		_jmbg = GetNizKaraktera(dfttekst);
+	}
+
+	Osoba(const char * imeprezime, const char* jmbg) {
+
+		_imeprezime = GetNizKaraktera(imeprezime);
+		_jmbg = GetNizKaraktera(jmbg);
+
+	}
+
+	Osoba(const Osoba& obj) // copy constructor
+	{
+		_imeprezime = GetNizKaraktera(obj._imeprezime);
+		_jmbg = GetNizKaraktera(obj._jmbg);
+	}
+
+	Osoba operator = (const Osoba& obj)  // operator dodjele
+	{
+		if (this != &obj)
+		{
+			delete[]_imeprezime;
+			delete[]_jmbg;
+
+			_imeprezime = GetNizKaraktera(obj._imeprezime);
+			_jmbg = GetNizKaraktera(obj._jmbg);
+		}
+
+		return *this;
+	}
+
+
+	//	cout << osoba1;
+	friend ostream& operator << (ostream& COUT, const Osoba& obj) {
+		COUT << obj._imeprezime << " - " << obj._jmbg << endl;
+		return COUT;
+	}
+
+	void Ispis() {  // Vedad - 123132123
+		cout << _imeprezime << " - " << _jmbg << endl;
+
+	}
+
+	// ALT + 1
+	~Osoba() {
+		delete[] _imeprezime;  
+		_imeprezime = nullptr;
+		delete[]_jmbg;
+		_jmbg = nullptr;
+	}
+
+
+};
+
+
+class Profesor:public Osoba {
+public:
+	char* _Titula;
+
+	// 1. dft. constructor
+	Profesor():Osoba() {
+		const char* dfttekst = "prof.";
+
+		_Titula = GetNizKaraktera(dfttekst);
+
+	}
+	// 2. Obicni constructor
+	Profesor(const char* titula, const char* ime, const char* jmbg) :Osoba(ime, jmbg) {
+
+		_Titula = GetNizKaraktera(titula);
+	}
+
+	// 3. copy constructor
+
+	//                      profesor1
+	Profesor(const Profesor& obj):Osoba(obj) {
+		_Titula = GetNizKaraktera(obj._Titula);
+	}
+	Profesor& operator = (const Profesor& obj) {
+		if (this != &obj) {
+			delete[]_Titula;
+
+			Osoba::operator=(obj);
+			_Titula = GetNizKaraktera(obj._Titula);
+		}
+		return *this;
+	}
+
+	~Profesor() {
+		delete[] _Titula;
+		_Titula = nullptr;
+	}
+
+	void Ispis() {
+		cout << _Titula << " " << _imeprezime << " - " << _jmbg << endl;
+
+		//Osoba::Ispis();  --> moze se osoba ispisati i na ovaj nacin
+	}
+
+	friend ostream& operator << (ostream& COUT, const Profesor& obj) {
+		COUT <<obj._Titula<<" "<< obj._imeprezime << " - " << obj._jmbg << endl;
+		//COUT << Osoba(obj);  i ovo je nacin ispsisa osobe
+		return COUT;
+	}
+
+
+};
+
+
+class Predmet {
+public:
+	char* _naziv;
+	int _ECTS;
+	Profesor* _predmetniProfesor; // ovo nije niz nego jedna vrijednost ( ) 
+
+	//                   Matematika 1       7                Nina Bijedic
+	Predmet(const char * naziv = "NP", int ects = 0,Profesor profesor = Profesor() ) {
+		_naziv = GetNizKaraktera(naziv);
+		_ECTS = ects;
+		_predmetniProfesor = new Profesor(profesor);
+	}
+
+	//                     predmet1
+	Predmet(const Predmet& obj) {
+		_naziv = GetNizKaraktera(obj._naziv);
+		_ECTS = obj._ECTS;
+		_predmetniProfesor = new Profesor(*obj._predmetniProfesor);
+	}
+
+	Predmet& operator = (const Predmet& obj) {
+		if (this != &obj) {
+			delete[]_naziv;
+			delete _predmetniProfesor;
+
+			_naziv = GetNizKaraktera(obj._naziv);
+			_ECTS = obj._ECTS;
+			_predmetniProfesor = new Profesor(*obj._predmetniProfesor);
+		}
+		return *this;
+	}
+
+
+	~Predmet() {
+		delete[]_naziv;
+		_naziv = nullptr;
+		delete _predmetniProfesor;
+		_predmetniProfesor = nullptr;
+	}
+
+	friend ostream& operator << (ostream& COUT, const Predmet& obj) {
+		COUT << obj._naziv << " [" << obj._ECTS << "]" << " kojeg predaje " << *obj._predmetniProfesor << endl;
+		return COUT;
+	}
+
+};
+
+
+
+
+
+
+
+
+
+class Student:public Osoba {
+public:
+	char* _index;
+	Predmet* _polozeniPredmeti; // ovo je niz [ ]
+	int _trenutno; // koliko trenutno ima unesenih predmeta
+	int _max;      // koliko maksimalno moze imati predmeta 
+
+
+	Student():Osoba() {
+		const char* dftindex = "IB00000";
+
+		_index = GetNizKaraktera(dftindex);
+
+		_trenutno = 0;
+		_max = 5;
+		_polozeniPredmeti = new Predmet[_max];
+	}
+
+	Student(const char * ime, const char * jmbg,const char * index, int max):Osoba(ime,jmbg) {
+		_index = GetNizKaraktera(index);
+		_trenutno = 0;
+		_max = max;
+		_polozeniPredmeti = new Predmet[_max];
+	}
+
+	~Student() {
+		delete[]_index;
+		_index = nullptr;
+		delete[]_polozeniPredmeti;
+		_polozeniPredmeti = nullptr;
+	}
+
+	//                        Programiranje 1
+	bool DodajPredmet(Predmet predmet) {
+		if (_max == _trenutno) { // 3 == 3
+			cout << "Ne moze se unijeti vise predmeta";
+			return false;
+		}
+
+
+
+		_polozeniPredmeti[_trenutno] = predmet;      // polozeni[0] = Progrmiranje 2, polozeni[1] = Matematika 1, polozeni[2] = PR1
+		_trenutno++;                                // 0 --> 1 --> 2  --> 3
+		return true;
+	}
+
+
+	friend ostream& operator << (ostream& COUT, const Student& obj) {
+		COUT << obj._imeprezime << " [" << obj._index << "]" << " - " << obj._jmbg << endl;
+		COUT << "=================POLOZENI PREDMETI STUDENTA=================" << endl;
+		for (int i = 0; i <obj._trenutno; i++)  // 0 1 2 
+		{
+			COUT << obj._polozeniPredmeti[i];
+		}
+		return COUT;
+	}
+
+	// trenutno = 3
+	// polozeni[0] = predmet1,   polozeni[1] = predmed2, polozeni[2] = predmet3
+
+
+};
+
+
+
+
+void main() {
+
+	//Osoba osoba0;
+	//osoba0.Ispis();
+		//profesor1.Ispis();
+
+	//Profesor profesor2 = profesor1; // copy construcotr
+	//profesor2.Ispis();
+
+	//Profesor profesrr3;
+	//profesrr3 = profesor1;  // operator dodjele
+	//profesrr3.Ispis();
+
+	//cout << profesor2;
+
+
+	Profesor profesor1("prof. dr. mr. sc.","Denis Music","131232312");
+	Profesor profesor2("doc.","Elmir Babovic","4124124");
+	Profesor profesor3("prof.","Nina Bijedic","12312");
+
+	Predmet predmet1("Programiranje 2", 7, profesor1);
+	Predmet predmet2("Programiranje 1", 7, profesor2);
+	Predmet predmet3("Matematika 1", 6, profesor3);
+
+	Student student("Vedad Keskin", "1212998150001", "IB180079", 3);
+	student.DodajPredmet(predmet1);
+	student.DodajPredmet(predmet3);
+	student.DodajPredmet(predmet2);
+	student.DodajPredmet(predmet2);
+	
+	cout << student;
+
+
+
+
+
+	system("PAUSE>0");
+}
